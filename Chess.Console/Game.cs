@@ -89,8 +89,8 @@
                         {
                             Board.Figures[CursorPosition.X, CursorPosition.Y] = chosenFigure;
                             Board.Figures[figurePosition.X, figurePosition.Y] = null;
+                            isCurrentPlayerFirst = !isCurrentPlayerFirst;
                         }
-                        isCurrentPlayerFirst = !isCurrentPlayerFirst;
                     }
                 }
                 else if (key.Key == ConsoleKey.Escape)
@@ -113,22 +113,16 @@
                 ConsoleKeyInfo key = Console.ReadKey(true);
 
                 if (key.Key == ConsoleKey.DownArrow && position <= 4)
-                {
                     position++;
-                }
                 else if (key.Key == ConsoleKey.UpArrow && position >= 0)
-                {
                     position--;
-                }
                 else if (key.Key == ConsoleKey.LeftArrow)
-                {
                     Settings.SettingsIndexer[position]--;
-                }
                 else if (key.Key == ConsoleKey.RightArrow)
-                {
                     Settings.SettingsIndexer[position]++;
-                }
-                else if (key.Key == ConsoleKey.Enter && position == 3) break;
+                else if (key.Key == ConsoleKey.Enter && position == 3) 
+                    break;
+                
                 Drawer.DrawSettings(position);
             }
         }

@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using static Chess.Logic.Pawn;
 
 namespace Chess.Logic
 {

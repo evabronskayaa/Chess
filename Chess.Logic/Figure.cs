@@ -12,6 +12,38 @@ namespace Chess.Logic
         public abstract bool IsCorrectMove(Point start, Point end);
     }
 
+    static class FiguresMethods 
+    {
+        public static bool CheckLine(Point start,  Point end, bool isHorizontal)
+        {
+            for (int coord = start.Y + Math.Sign(end.Y - start.Y);
+            Math.Abs(coord - end.Y) > 0;
+            coord += Math.Sign(end.Y - start.Y))
+            {
+                if (isHorizontal)
+                {
+                    if (Board.Figures[coord, end.X] != null) return false;
+                }
+                else if (Board.Figures[end.X, coord] != null) return false;
+            }
+            return true;
+        }
+
+        public static bool CheckDiagonal(Point start, Point end)
+        {
+            int x = start.X + Math.Sign(end.X - start.X);
+            int y = start.Y + Math.Sign(end.Y - start.Y);
+            for (; x != end.X && y != end.Y;)
+            {
+                if (Board.Figures[x, y] != null) return false;
+
+                x += Math.Sign(end.X - start.X);
+                y += Math.Sign(end.Y - start.Y);
+            }
+            return true;
+        }
+    }
+
     public class Pawn : IFigure
     {
         public char Abbreviation => 'P';
@@ -20,7 +52,13 @@ namespace Chess.Logic
         {
             if (Board.Figures[end.X, end.Y] == null)
             {
-                return end.X == start.X && Math.Abs(Math.Abs(end.Y - start.Y) - (2 * (IsFirstPlayer ? -1 : 1))) <= 1;
+                if (end.X == start.X && Math.Sign(end.Y - start.Y) == (IsFirstPlayer ? -1 : 1))
+                    if (Math.Abs(end.Y - start.Y) == 1)
+                        return true;
+                    else if (Math.Abs(end.Y - start.Y) == 2)
+                        return !(Board.Figures[start.X, start.Y + (IsFirstPlayer ? 1 : -1)] == null);
+
+                return false;
             }
             else if (IsFirstPlayer != Board.Figures[end.X, end.Y].IsFirstPlayer)
             {
@@ -35,7 +73,7 @@ namespace Chess.Logic
         }
     }
 
-    public class Rook : IFigure//ладья
+    public class Rook : IFigure //ладья
     {
         public char Abbreviation => 'R';
         public bool IsFirstPlayer { get; set; }
@@ -43,7 +81,9 @@ namespace Chess.Logic
         {
             if (Board.Figures[end.X, end.Y] == null || IsFirstPlayer != Board.Figures[end.X, end.Y].IsFirstPlayer)
             {
-                return end.X == start.X || end.Y == start.Y;
+                if (end.X == start.X) return FiguresMethods.CheckLine(start, end, false);
+                else if (end.Y == start.Y) return FiguresMethods.CheckLine(start, end, true);
+                else return false;
             }
             return false;
         }
@@ -82,7 +122,8 @@ namespace Chess.Logic
         {
             if (Board.Figures[end.X, end.Y] == null ||  IsFirstPlayer != Board.Figures[end.X, end.Y].IsFirstPlayer)
             {
-                return Math.Abs(end.Y - start.Y) == Math.Abs(end.X - start.X);
+                if (Math.Abs(end.Y - start.Y) == Math.Abs(end.X - start.X))
+                    return FiguresMethods.CheckDiagonal(start, end);
             }
             return false;
         }
@@ -101,7 +142,10 @@ namespace Chess.Logic
         {
             if (Board.Figures[end.X, end.Y] == null || IsFirstPlayer != Board.Figures[end.X, end.Y].IsFirstPlayer)
             {
-                return end.X == start.X || end.Y == start.Y || Math.Abs(end.Y - start.Y) == Math.Abs(end.X - start.X);
+                if (end.X == start.X) return FiguresMethods.CheckLine(start, end, false);
+                else if (end.Y == start.Y) return FiguresMethods.CheckLine(start, end, true);
+                else if (Math.Abs(end.Y - start.Y) == Math.Abs(end.X - start.X)) return FiguresMethods.CheckDiagonal(start, end);
+                else return false;
             }
             return false;
         }

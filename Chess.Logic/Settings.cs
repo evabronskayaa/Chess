@@ -29,7 +29,7 @@ namespace Chess.Logic
             }
             set
             {
-                if (value >= 0 && value < 5)
+                if (value >= 0 && value < 50)
                     topIndent = value;
             }
         }
@@ -41,7 +41,7 @@ namespace Chess.Logic
             }
             set
             {
-                if (value >= 0 && value < 5)
+                if (value >= 0 && value < 100)
                     leftIndent = value;
             }
         }
