@@ -48,27 +48,17 @@
                 for (int j = 0; j < widthCell; j++) 
                 {
                     if (i == Game.CursorPosition.X && positionY == Game.CursorPosition.Y)
-                    {
                         Console.BackgroundColor = ConsoleColor.Red;
-                    }
 
                     if (j == (widthCell - 1) / 2)
                     {
                         if (positionY != -1)
-                        {
                             if (Board.Figures[i, positionY] != null)
-                            {
                                 Console.Write(Board.Figures[i, positionY].Abbreviation);
-                            }
                             else
-                            {
-                                Console.Write(indent);
-                            }
-                        }
+                                Console.Write(indent); 
                         else
-                        {
                             Console.Write(indent);
-                        }
                     }
                     else 
                     {
@@ -142,7 +132,5 @@
 
             return items;
         }
-
-        
     }
 }

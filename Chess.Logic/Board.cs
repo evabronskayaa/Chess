@@ -14,6 +14,7 @@ namespace Chess.Logic
 
         public static IFigure[,] FillBoard() 
         {
+            Figures = new IFigure[Size.X, Size.Y];
             IEnumerator<IFigure> enumerator1 = GetAnotherFigures(false);
             IEnumerator<IFigure> enumerator2 = GetAnotherFigures(true);
 
@@ -54,7 +55,7 @@ namespace Chess.Logic
                 StringBuilder builder = new StringBuilder();
                 foreach (IFigure? e in Figures) 
                 {
-                    if (e != null)
+                    if (e == null)
                         builder.Append("nn");
                     else
                         builder.Append(e.Abbreviation.ToString() + (e.IsFirstPlayer? 1: 0).ToString());
@@ -67,31 +68,34 @@ namespace Chess.Logic
             {
                 Figures = new IFigure[Size.X,  Size.Y];
                 var loading = File.ReadAllText("stateOfGame");
-                for (int y = 0; y < Size.Y; y++)
+                for (int y = 0; y < Size.Y; y++) 
+                {
                     for (int x = 0; x < Size.X; x++)
                     {
-                        switch (loading[y * Size.X + x * 2])
+                        var aaa = (x * Size.Y + y) * 2;
+                        switch (loading[aaa])
                         {
                             case 'P':
-                                Figures[x, y] = new Pawn(loading[y * Size.X + x * 2 + 1] == '1');
+                                Figures[x, y] = new Pawn(loading[aaa + 1] == '1');
                                 break;
                             case 'R':
-                                Figures[x, y] = new Rook(loading[y * Size.X + x * 2 + 1] == '1');
+                                Figures[x, y] = new Rook(loading[aaa + 1] == '1');
                                 break;
                             case 'H':
-                                Figures[x, y] = new Knight(loading[y * Size.X + x * 2 + 1] == '1');
+                                Figures[x, y] = new Knight(loading[aaa + 1] == '1');
                                 break;
                             case 'B':
-                                Figures[x, y] = new Bishop(loading[y * Size.X + x * 2 + 1] == '1');
+                                Figures[x, y] = new Bishop(loading[aaa + 1] == '1');
                                 break;
                             case 'Q':
-                                Figures[x, y] = new Queen(loading[y * Size.X + x * 2 + 1] == '1');
+                                Figures[x, y] = new Queen(loading[aaa + 1] == '1');
                                 break;
                             case 'K':
-                                Figures[x, y] = new King(loading[y * Size.X + x * 2 + 1] == '1');
+                                Figures[x, y] = new King(loading[aaa + 1] == '1');
                                 break;
                         }
                     }
+                } 
             }
         }
     }

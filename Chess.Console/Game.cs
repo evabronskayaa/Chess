@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.IO;
     using System.Text;
     public static class Game
     {
@@ -41,8 +42,11 @@
                             DoGameLoop();
                             break;
                         case 1:
-                            Board.DataWorker.LoadBoard();
-                            DoGameLoop();
+                            if (File.Exists("stateOfGame")) 
+                            {
+                                Board.DataWorker.LoadBoard();
+                                DoGameLoop();
+                            } 
                             break;
                         case 2:
                             DoSettingsLoop();
@@ -98,9 +102,7 @@
                     Board.DataWorker.SaveBoard();
                     break;
                 }
-
                 Drawer.DrawBoard();
-
             }
         }
 
