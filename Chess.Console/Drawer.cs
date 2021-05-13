@@ -53,12 +53,26 @@
                     if (j == (widthCell - 1) / 2)
                     {
                         if (positionY != -1)
+                        {
                             if (Board.Figures[i, positionY] != null)
+                            {
+                                if (Board.Figures[i, positionY].IsFirstPlayer)
+                                    Console.ForegroundColor = ConsoleColor.Black;
+                                else
+                                    Console.ForegroundColor = ConsoleColor.DarkGray;
+
                                 Console.Write(Board.Figures[i, positionY].Abbreviation);
+                                Console.ForegroundColor = Colors[Settings.Color];
+                            }
                             else
-                                Console.Write(indent); 
-                        else
+                            {
+                                Console.Write(indent);
+                            }
+                        }
+                        else 
+                        {
                             Console.Write(indent);
+                        }   
                     }
                     else 
                     {

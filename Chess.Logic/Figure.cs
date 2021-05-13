@@ -12,9 +12,9 @@ namespace Chess.Logic
         public abstract bool IsCorrectMove(Point start, Point end);
     }
 
-    static class FiguresMethods 
+    static class FigureExtension 
     {
-        public static bool CheckLine(Point start,  Point end, bool isHorizontal)
+        public static bool CheckLine(this IFigure figure,  Point start,  Point end, bool isHorizontal)
         {
             for (int coord = start.Y + Math.Sign(end.Y - start.Y);
             Math.Abs(coord - end.Y) > 0;
@@ -29,7 +29,7 @@ namespace Chess.Logic
             return true;
         }
 
-        public static bool CheckDiagonal(Point start, Point end)
+        public static bool CheckDiagonal(this IFigure figure, Point start, Point end)
         {
             int x = start.X + Math.Sign(end.X - start.X);
             int y = start.Y + Math.Sign(end.Y - start.Y);
@@ -81,8 +81,8 @@ namespace Chess.Logic
         {
             if (Board.Figures[end.X, end.Y] == null || IsFirstPlayer != Board.Figures[end.X, end.Y].IsFirstPlayer)
             {
-                if (end.X == start.X) return FiguresMethods.CheckLine(start, end, false);
-                else if (end.Y == start.Y) return FiguresMethods.CheckLine(start, end, true);
+                if (end.X == start.X) return this.CheckLine(start, end, false);
+                else if (end.Y == start.Y) return this.CheckLine(start, end, true);
                 else return false;
             }
             return false;
@@ -123,7 +123,7 @@ namespace Chess.Logic
             if (Board.Figures[end.X, end.Y] == null ||  IsFirstPlayer != Board.Figures[end.X, end.Y].IsFirstPlayer)
             {
                 if (Math.Abs(end.Y - start.Y) == Math.Abs(end.X - start.X))
-                    return FiguresMethods.CheckDiagonal(start, end);
+                    return this.CheckDiagonal(start, end);
             }
             return false;
         }
@@ -142,9 +142,9 @@ namespace Chess.Logic
         {
             if (Board.Figures[end.X, end.Y] == null || IsFirstPlayer != Board.Figures[end.X, end.Y].IsFirstPlayer)
             {
-                if (end.X == start.X) return FiguresMethods.CheckLine(start, end, false);
-                else if (end.Y == start.Y) return FiguresMethods.CheckLine(start, end, true);
-                else if (Math.Abs(end.Y - start.Y) == Math.Abs(end.X - start.X)) return FiguresMethods.CheckDiagonal(start, end);
+                if (end.X == start.X) return this.CheckLine(start, end, false);
+                else if (end.Y == start.Y) return this.CheckLine(start, end, true);
+                else if (Math.Abs(end.Y - start.Y) == Math.Abs(end.X - start.X)) return this.CheckDiagonal(start, end);
                 else return false;
             }
             return false;
