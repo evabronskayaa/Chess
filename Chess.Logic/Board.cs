@@ -61,13 +61,13 @@ namespace Chess.Logic
                         builder.Append(e.Abbreviation.ToString() + (e.IsFirstPlayer? 1: 0).ToString());
                 }
 
-                File.WriteAllText("stateOfGame", builder.ToString());
+                File.WriteAllText("stateOfGame.txt", builder.ToString());
             }
 
             public static void LoadBoard() 
             {
                 Figures = new IFigure[Size.X,  Size.Y];
-                var loading = File.ReadAllText("stateOfGame");
+                var loading = File.ReadAllText("stateOfGame.txt");
                 for (int y = 0; y < Size.Y; y++) 
                 {
                     for (int x = 0; x < Size.X; x++)

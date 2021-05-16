@@ -15,8 +15,6 @@ namespace Chess.Desktop
         public TextBlock Text { get; private set; }
         public int X { get; private set; }
         public int Y { get; private set; }
-        public double MarginX { get; private set; }
-        public double MarginY { get; private set; }
         private IFigure figure;
         public IFigure Figure 
         {
@@ -41,11 +39,11 @@ namespace Chess.Desktop
             {
                 Width = Drawer.CellSize,
                 Height = Drawer.CellSize,
-                Fill = (x + y % 2) % 2 == 0 ? Brushes.White : Brushes.Black,
+                Fill = (x + y % 2) % 2 == 0 ? Brushes.Bisque : Brushes.BurlyWood,
                 Stroke = Drawer.Colors[Settings.Color]
             };
 
-            Rectangle.Margin = new Thickness(x * Drawer.CellSize, y * Drawer.CellSize, 0, 0);
+            Rectangle.Margin = new Thickness(x * Drawer.CellSize + Settings.LeftIndent * 10, y * Drawer.CellSize + Settings.TopIndent * 10, 0, 0);
             canvas.Children.Add(Rectangle);
 
             Text = new TextBlock();
@@ -56,11 +54,11 @@ namespace Chess.Desktop
             if (Board.Figures[x, y] != null)
             {
                 Text.Text = Board.Figures[x, y].Abbreviation.ToString();
-                Text.Foreground = Board.Figures[x, y].IsFirstPlayer ? Brushes.Gray : Brushes.DarkGray;
+                Text.Foreground = Board.Figures[x, y].IsFirstPlayer ?  Brushes.Black : Brushes.White;
             }
 
 
-            Text.Margin = new Thickness(x * Drawer.CellSize + Drawer.CellSize / 5, y * Drawer.CellSize, 0, 0);
+            Text.Margin = new Thickness(x * Drawer.CellSize + Drawer.CellSize / 5 + Settings.LeftIndent * 10, y * Drawer.CellSize + Settings.TopIndent * 10, 0, 0);
             canvas.Children.Add(Text);
         }
 
@@ -69,7 +67,7 @@ namespace Chess.Desktop
             if (Board.Figures[X, Y] != null)
             {
                 Text.Text = Board.Figures[X, Y].Abbreviation.ToString();
-                Text.Foreground = Board.Figures[X, Y].IsFirstPlayer ? Brushes.Gray : Brushes.DarkGray;
+                Text.Foreground = Board.Figures[X, Y].IsFirstPlayer ? Brushes.Black : Brushes.White;
             }
             else 
             {

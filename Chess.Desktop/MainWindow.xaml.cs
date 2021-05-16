@@ -16,9 +16,6 @@ using System.Windows.Shapes;
 
 namespace Chess.Desktop
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -30,24 +27,23 @@ namespace Chess.Desktop
         private void btnStartGame(object sender, RoutedEventArgs e)
         {
             Board.FillBoard();
-            Drawer.CreateGameWindow();
-
+            Drawer.CreatePreviousGameWindow();
         }
 
         private void btnContinue(object sender, RoutedEventArgs e)
         {
-
+            Board.DataWorker.LoadBoard();
+            Drawer.CreateGameWindow();
         }
 
         private void btnSettings(object sender, RoutedEventArgs e)
         {
-
-
+            Drawer.CreateSettingsWindow();
         }
 
         private void btnRating(object sender, RoutedEventArgs e)
         {
-
+            Drawer.CreateRatingWindow();
         }
 
         private void btnExit(object sender, RoutedEventArgs e)
