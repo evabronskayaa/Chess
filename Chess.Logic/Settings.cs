@@ -51,7 +51,6 @@ namespace Chess.Logic
     }
     public class SettingsIndexer
     {
-        public int lenght = 8;
         public int this[int index]
         {
             get

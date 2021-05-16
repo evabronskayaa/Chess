@@ -1,0 +1,17 @@
+﻿<Window x:Class="Chess.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Chess.Desktop"
+        mc:Ignorable="d"
+        Title="Chess" Height="450" Width="450">
+    <StackPanel>
+        <TextBlock Margin="40" Text="Chess" HorizontalAlignment="Center" FontSize="70" Foreground="#425B90 "/>
+        <Button Margin="5" Height="20" Width ="150" Content="НАЧАТЬ ИГРУ" Click="btnStartGame"/>
+        <Button Margin="5" Height="20" Width ="150" Content="ПРОДОЛЖИТЬ" Click="btnContinue"/>
+        <Button Margin="5" Height="20" Width ="150" Content="НАСТРОЙКИ" Click="btnSettings"/>
+        <Button Margin="5" Height="20" Width ="150" Content="РЕЙТИНГ" Click="btnRating"/>
+        <Button Margin="5" Height="20" Width ="150" Content="ВЫХОД" Click="btnExit"/>
+    </StackPanel>
+</Window>
