@@ -2,11 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-//using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -21,7 +21,7 @@ namespace Chess.Desktop
         public static Window MainWindow { get; set; }
         public static System.Drawing.Point CursorPosition { get; private set; }
 
-        private static Cell[,] cells =  new Cell[Board.Size.X, Board.Size.Y];
+        private static Cell[,] cells = new Cell[Board.Size.X, Board.Size.Y];
 
         public static Dictionary<int, SolidColorBrush> Colors = new Dictionary<int, SolidColorBrush>()
         {
@@ -36,20 +36,19 @@ namespace Chess.Desktop
         private static IFigure chosenFigure;
         private static bool isCurrentPlayerFirst;
 
-        public static void CreateGameWindow() 
+        public static void CreateGameWindow()
         {
             var gameWindow = GetNewWindow();
             gameWindow.Closed += GameWindow_Closed;
             field = new Canvas();
             field.MouseUp += Field_MouseUp;
             gameWindow.Content = field;
-            
 
-            for (int y = 0; y < Board.Size.Y; y++) 
+            for (int y = 0; y < Board.Size.Y; y++)
             {
-                for (int x = 0; x < Board.Size.X; x++) 
+                for (int x = 0; x < Board.Size.X; x++)
                 {
-                    cells[x, y] = new Cell(field, x, y);  
+                    cells[x, y] = new Cell(field, x, y);
                 }
             }
         }
@@ -64,32 +63,32 @@ namespace Chess.Desktop
             stackPanel.Children.Add(player1);
             stackPanel.Children.Add(player2);
 
-            var name1 = new TextBlock();
-            name1.Text = "Введите имя: ";
-            var name2 = new TextBlock();
-            name2.Text = "Введите имя: ";
+            var textBlock1 = new TextBlock();
+            textBlock1.Text = "Введите имя: ";
+            var textBlock2 = new TextBlock();
+            textBlock2.Text = "Введите имя: ";
+
+            player1.Children.Add(textBlock1);
+            player2.Children.Add(textBlock2);
+
+            var name1 = new TextBox();
+            var name2 = new TextBox();
 
             player1.Children.Add(name1);
             player2.Children.Add(name2);
-
-            var textBox1 = new TextBox();
-            var textBox2 = new TextBox();
-
-            player1.Children.Add(textBox1);
-            player2.Children.Add(textBox2);
 
             var btnDone = new Button();
             btnDone.Content = "Готово";
             btnDone.Click += (object sender, RoutedEventArgs e) => 
             {
-                firstPlayerName = textBox1.Text;
-                secondPlayerName = textBox2.Text;
+                firstPlayerName = name1.Text;
+                secondPlayerName = name2.Text;
                 CreateGameWindow();
                 previousGameWindow.Close();
             };
+
             stackPanel.Children.Add(btnDone);
             previousGameWindow.Content = stackPanel;
-            
         }
 
         private static void GameWindow_Closed(object sender, EventArgs e)
@@ -98,9 +97,61 @@ namespace Chess.Desktop
             MainWindow.Show();
         }
 
+        private static void CheckFigures()
+        {
+            int figuresCount1 = 0;
+            int figuresCount2 = 0;
+            for (int x = 0; x < Board.Size.X; x++)
+            {
+                for (int y = 0; y < Board.Size.Y; y++)
+                {
+                    if (Board.Figures[x, y] != null)
+                    {
+                        if (Board.Figures[x, y].IsFirstPlayer == false)
+                            figuresCount1++;
+                        else
+                            figuresCount2++;
+                    }
+                }
+            }
+            if (figuresCount1 == 0)
+            {
+                CreateWinnersWindow(secondPlayerName, GetRatingFromFile()[secondPlayerName]);
+            }
+            else if (figuresCount2 == 0) 
+            {
+                CreateWinnersWindow(firstPlayerName, GetRatingFromFile()[firstPlayerName]);
+            }
+        }
+        private static void CreateWinnersWindow(string winnersName, int count)
+        {
+            var winnersWindow = GetNewWindow();
+            winnersWindow.Closed += (object sender, EventArgs e) =>
+            {
+                winnersWindow.Close();
+            };
+
+            var stackPanel = new StackPanel();
+            var textBlock = new TextBlock();
+            textBlock.Text = winnersName + " победил(а)!";
+            stackPanel.Children.Add(textBlock);
+
+            if (File.ReadAllText("rating.txt").Contains(winnersName + ";" + count))
+            {
+                File.WriteAllLines("rating.txt",
+                        File.ReadLines("rating.txt").Where(l => l != (winnersName + ";" + count)).ToList());
+                count += 1;
+                File.AppendAllText("rating.txt", winnersName + ";" + count);
+            }
+            else
+            {
+                File.AppendAllText("rating.txt", "\n" + winnersName + ";" + 1);
+            }
+
+            winnersWindow.Content = stackPanel;
+        }
         private static void Field_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            
             var x = e.GetPosition(field).X - Settings.LeftIndent * 10;
             var y = e.GetPosition(field).Y - Settings.TopIndent * 10;
             var _x = (int)(Math.Floor(x / CellSize));
@@ -115,6 +166,7 @@ namespace Chess.Desktop
                 {
                     isFigureChosen = true;
                     figurePosition = new System.Drawing.Point(CursorPosition.X, CursorPosition.Y);
+                    CheckFigures();
                 }
             }
             else
@@ -125,6 +177,7 @@ namespace Chess.Desktop
                     cells[CursorPosition.X, CursorPosition.Y].Figure = chosenFigure;
                     cells[figurePosition.X, figurePosition.Y].Figure = null;
                     isCurrentPlayerFirst = !isCurrentPlayerFirst;
+                    CheckFigures();
                 }
             }
         }
@@ -139,7 +192,6 @@ namespace Chess.Desktop
 
             return newWindow;
         }
-        
 
         public static void CreateSettingsWindow()
         {
